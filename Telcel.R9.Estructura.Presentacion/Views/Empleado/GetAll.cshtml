@@ -1,0 +1,131 @@
+﻿@model Celeste.R9.Estructura.Negocio.Empleado
+@{
+    ViewBag.Title = "GetAll";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <div class="row">
+        <h2>Empleados</h2>
+    </div>
+    <hr />
+
+    <div class="row">
+        @using (Html.BeginForm("GetAll", "Empleado", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            <div class="container">
+                <div class="row align-items-start">
+
+                    <div class="col">
+                        <div class="form-group-sm">
+                            @Html.TextBoxFor(model => model.Nombre, new { @class = "form-control", @id = "txtNombre", @onkeypress = "SoloLetras(event,'lblNombre','txtNombre)" })
+                            @Html.ValidationMessageFor(model => model.Nombre, null, new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <br />
+                    <div class="col">
+                        <div class="form-group-sm">
+                            <input type="submit" value="Buscar" class="btn btn-info" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    @using (Html.BeginForm("Form", "Empleado", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <div class="row g-3" id="input" style="display:none;">
+            <div class="col-md-6">
+                <div class="input-group">
+                    <div class="row">
+                        @Html.TextBoxFor(model => model.EmpleadoID, new { @class = "hidden" })
+                        @Html.ValidationMessageFor(model => model.EmpleadoID)
+                    </div>
+                    <br />
+                    <div class="row">
+                        @Html.LabelFor(model => model.Nombre)
+                        @Html.TextBoxFor(model => model.Nombre, new { @class = "visually-hidden form-control" })
+                        @Html.ValidationMessageFor(model => model.Nombre)
+                    </div>
+                    <br />
+                    <div class="row">
+                        @Html.LabelFor(model => model.Puesto.PuestoID)
+                        @Html.TextBoxFor(model => model.Puesto.PuestoID, new { @class = "visually-hidden form-control" })
+                        @Html.ValidationMessageFor(model => model.Puesto.PuestoID)
+                    </div>
+                    <br />
+                    <div class="row">
+                        @Html.LabelFor(model => model.Departamento.DepartamentoID)
+                        @Html.TextBoxFor(model => model.Departamento.DepartamentoID, new { @class = "visually-hidden form-control" })
+                        @Html.ValidationMessageFor(model => model.Departamento.DepartamentoID)
+                    </div>
+                    <br />
+                    <div class="center-block ">
+                        <button class="btn btn-success" type="submit">Agregar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    <div class="col-md-3" style="float:right">
+        <a><input id="idAgregar" type="submit" value="Agregar" class="btn btn-success col-md-4" onclick="" /></a>
+    </div>
+</div>
+
+    <hr />
+    <div class="row">
+        @if (Model.Empleados != null)
+        {
+            //tabla
+             <table class="table-info table table-bordered table-responsive table-hover">
+                <thead>
+                    <tr>
+
+                        <td class="hidden">EmpleadoID</td>
+                        <td class="text-center" style=" font-weight:bold">Nombre</td>
+                        <td class="text-center" style=" font-weight:bold;">Puesto</td>
+                        <td class="text-center" style=" font-weight:bold;">Departamento</td>
+                        <td class="text-center" style=" font-weight:bold;">Eliminar</td>
+
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (Celeste.R9.Estructura.Negocio.Empleado empleado in Model.Empleados)
+                    {
+                        <tr>
+
+                            <td class="hidden">@empleado.EmpleadoID</td>
+                            <td>@empleado.Nombre</td>
+                            <td class="hidden">@empleado.Puesto.PuestoID</td>
+                            <td>@empleado.Puesto.Descripcion</td>
+                            <td class="hidden">@empleado.Departamento.DepartamentoID</td>
+                            <td>@empleado.Departamento.Descripcion</td>
+
+                            <td class="text-center"><a class="btn btn-danger glyphicon glyphicon-trash" href="@Url.Action("Delete", "Empleado", new { EmpleadoID = empleado.EmpleadoID })" onclick="return confirm('Estas seguro que deseas eliminar este registro?');"></a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <div class="alert alert-danger" role="alert">Ocurrio un error al realizar la consulta </div>
+        }
+    </div>
+</div>
+
+@section Scripts
+{
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
+
+    <script type="text/javascript">
+        $('#idAgregar').click(function () {
+            $('#input').toggle('slow', function () {
+            });
+        });
+    </script>
+}
